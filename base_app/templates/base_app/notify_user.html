@@ -3,8 +3,8 @@
 {% block content %}
 
     <div class="container">
-    <div class="jumbotron success">
-        <h3>
+    <div class="jumbotron">
+        <h3 class="text-black-50">
             Congratulations. You have been successfully registered for the KCT channel.
             Your request is awaiting approval.
             You will be added to the channel once approved. Thanks
@@ -19,4 +19,14 @@
         color: darkgreen;
     }
     </style>
+
+    <script>
+        function redirect(){
+            const element = document.createElement("a");
+            element.href = "/"
+            element.click()
+        }
+
+        setTimeout(redirect,5000)
+    </script>
 {% endblock content %}

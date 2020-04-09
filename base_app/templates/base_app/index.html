@@ -22,13 +22,13 @@
     <div class="row mt-5">
         <div class="col-sm-12">
 
-            <p>Provide Telegram Number if different from above mentioned phone number. Else Please Leave it blank</p>
+            <p>Enter your telegram number.</p>
 
             <form action="." method="POST" class="form">
                 {% csrf_token %}
                 <label for="telegram_number">Telegram Number (Without country code)</label>
-                <input class="form-control" name="telegram_number" type="text" maxlength="10" id="telegram_number"
-                    type="text">
+                <input class="form-control" name="telegram_number" type="text" maxlength="10" minlength="10" id="telegram_number" value={{phone}}
+                    type="text" >
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Get OTP</button>
                 </div>

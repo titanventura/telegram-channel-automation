@@ -25,7 +25,7 @@ SECRET_KEY = 'rpv)s+fo$wd52*zm#q4_8j&n&*ch=7fde+mu!&5az!*p2dd=h*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.1.75.243','127.0.0.1']
+ALLOWED_HOSTS = ['10.1.75.243','127.0.0.1','telekct.xyz']
 
 SITE_ID = 2
 
@@ -49,6 +49,11 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",   # <--
 ]
 
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+# SOCIALACCOUNT_EMAIL_VERIFICATION = ACCOUNT_EMAIL_VERIFICATION
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

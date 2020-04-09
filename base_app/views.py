@@ -61,7 +61,7 @@ async def send_code(ph_no):
 
 
 
-@login_required
+@login_required(login_url="/")
 def home(request):
     if request.method == "POST":
         # request.session["user_record_id"] = request.user.id
@@ -69,8 +69,6 @@ def home(request):
         user_obj = request.user
         user_record = user_obj.userrecord
         # user_record.telegram_number = telegram_number
-        if telegram_number == '':
-            telegram_number = user_record.phone
         # (client,flag) = loop.run_until_complete(get_client())
         # print(client)
         # print(flag)
@@ -101,6 +99,16 @@ def home(request):
     if request.user.is_authenticated:
         try:
             record = get_object_or_404(UserRecord,email=request.user.email)
+            print()
+            if str(record.time_added_to_group) != "0001-01-01 00:00:00+00:00":
+                logout(request)
+                messages.error(request, "Already added to group")
+                messages.warning(request, "Logged out successfully")
+                return redirect('/')
+            if str(record.time_registered) != "0001-01-01 00:00:00+00:00":
+                logout(request)
+                messages.warning(request,"Logging out...")
+                return render(request, "base_app/notify_user.html", {})
             if not record.user:
                 record.user = request.user
                 record.save()
@@ -127,7 +135,7 @@ async def verify_code(phone,pin,hash):
         first_name="KCT_TELEGRAM_BOT_2.0",last_name="")
         result = await client(ImportContactsRequest([contact]))
         # print(result[0].user)
-        client.disconnect()
+        await client.disconnect()
         print(client.is_connected(),"client connection")
         os.chdir("D:\\Projects\\telegram\\aswath\\env\\Scripts\\telegram_users_add\\base_app")
         os.listdir()
@@ -140,7 +148,7 @@ async def verify_code(phone,pin,hash):
 
 
 
-@login_required
+@login_required(login_url="/")
 def verify(request):
     if request.method == "POST":
         pin = request.POST["OTP"]
@@ -151,10 +159,10 @@ def verify(request):
         user_record_obj.telegram_number = f"+91{phone}"
         user_record_obj.time_registered = datetime.datetime.now()
         user_record_obj.save()
+        logout(request)
         return render(request,"base_app/notify_user.html",{})
 
-
-@login_required
+@login_required(login_url="/")
 def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
@@ -205,7 +213,7 @@ def logout_user(request):
 #
 #dude it is working correctly, go create a user record instance m.m.m. seri
 
-@login_required
+@login_required(login_url="/")
 def view(request):
 
     if request.user.is_superuser:
