@@ -1,0 +1,21 @@
+{% extends 'base_app/temp.html' %}
+{% block content %}
+{% load socialaccount %}
+<html>
+  <head>
+    <title>Google Registration</title>
+  </head>
+  <body style="height: 100vh;">
+      <div class="container" style="height: 100%;">
+        <h1>KCT Telegram Channel Login </h1>
+        {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }} !</p>
+       
+        {% else %}
+        <a style="font-size: 20px" href="{% provider_login_url 'google' %}"><button class="btn btn-large btn-primary">Login with Google</button></a>
+        {% endif %}
+      
+      </div>
+  </body>
+</html>
+{% endblock content %}

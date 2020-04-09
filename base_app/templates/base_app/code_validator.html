@@ -1,0 +1,12 @@
+{% extends 'base_app/temp.html' %}
+{% block content %}
+<div class="input-container">
+    <form action={% url 'validate_pin' %} method="POST">
+        {% csrf_token %}
+        <label for="OTP">Enter OTP from telegram account</label>
+        <input id="OTP" name="OTP" type="text" minlength="5" maxlength="5">
+        <input type="hidden" value={{num}} name="ph_num" />
+        <button type="submit">validate OTP</button>
+    </form>
+</div>
+{% endblock content %}
