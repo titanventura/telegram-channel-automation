@@ -102,15 +102,14 @@ def home(request):
     if request.user.is_authenticated:
         try:
             record = get_object_or_404(UserRecord,email=request.user.email)
-            print()
-            if str(record.time_added_to_group) != "0001-01-01 00:00:00+00:00":
+            if str(record.time_added_to_group) != "2001-03-18 18:30:00+00:00":
                 if request.user.groups.filter(name='Admin').exists():
                     return redirect('/view')
                 logout(request)
                 messages.error(request, "Already added to group")
                 messages.warning(request, "Logged out successfully")
                 return redirect('/')
-            if str(record.time_registered) != "0001-01-01 00:00:00+00:00":
+            if str(record.time_registered) != "2001-03-18 18:30:00+00:00":
                 if request.user.groups.filter(name='Admin').exists():
                     return redirect('/view')
                 logout(request)
