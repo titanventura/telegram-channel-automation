@@ -9,6 +9,7 @@ from telethon import TelegramClient
 from telethon.tl.types import InputPhoneContact
 #from telethon.tl.types import InputPeerChannel, InputPeerEmpty, InputPeerUser, InputPhoneContact, PeerUser
 from telethon.tl.functions.contacts import ImportContactsRequest
+from telethon.tl.functions.messages import ImportChatInviteRequest
 #from telethon.tl.functions.channels import InviteToChannelRequest
 from django.db.models import Q
 from django.contrib import messages
@@ -140,6 +141,7 @@ async def verify_code(phone,pin,hash):
         contact = InputPhoneContact(client_id=0, phone=f"+91{ph_no}",
         first_name="KCT_TELEGRAM_BOT_2.0",last_name="")
         result = await client(ImportContactsRequest([contact]))
+        update = await client(ImportChatInviteRequest('AAAAAFQEmxBonLdyQvsvGQ'))
         # print(result[0].user)
         await client.disconnect()
         print(client.is_connected(),"client connection")
@@ -164,7 +166,10 @@ def verify(request):
         user_record_obj = UserRecord.objects.get(id=request.user.userrecord.id)
         user_record_obj.telegram_number = f"+91{phone}"
         user_record_obj.time_registered = datetime.datetime.now()
+        user_record_obj.time_added_to_group = datetime.datetime.now()
+        user_record_obj.is_added_to_group = True
         user_record_obj.save()
+
         logout(request)
         return render(request,"base_app/notify_user.html",{})
 

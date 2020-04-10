@@ -24,3 +24,4 @@ Telethon==1.11.3
 urllib3==1.25.8
 tqdm
 psycopg2==2.7.1
+pandas
