@@ -2,7 +2,7 @@ web:
   restart: always
   build: .
   ports:
-    - 8000:8000
+    - 8005:8000
   expose:
     - 8000
   volumes:
@@ -17,6 +17,6 @@ postgres:
   image: postgres:latest
   env_file: production.env
   ports:
-    - "5432:5432"
+    - "5439:5432"
   volumes:
     - pgdata:/var/lib/postgresqql/data/

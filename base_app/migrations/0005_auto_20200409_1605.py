@@ -14,11 +14,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userrecord',
             name='time_added_to_group',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(1, 1, 1, 0, 0), null=True),
+            field=models.DateTimeField(blank=True, default=datetime.datetime(1997, 1, 1, 0, 0), null=True),
         ),
         migrations.AlterField(
             model_name='userrecord',
             name='time_registered',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(1, 1, 1, 0, 0), null=True),
+            field=models.DateTimeField(blank=True, default=datetime.datetime(1997, 1, 1, 0, 0), null=True),
         ),
     ]

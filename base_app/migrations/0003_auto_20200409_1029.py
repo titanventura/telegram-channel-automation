@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userrecord',
             name='time_added_to_group',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(1, 1, 1, 0, 0)),
+            field=models.DateTimeField(blank=True, default=datetime.datetime(1997, 1, 1, 0, 0)),
         ),
         migrations.AlterField(
             model_name='userrecord',

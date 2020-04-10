@@ -29,8 +29,6 @@ ALLOWED_HOSTS = ['*']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.1.75.243','127.0.0.1','telekct.xyz']
-
 SITE_ID = 2
 
 LOGIN_REDIRECT_URL = '/home/'
