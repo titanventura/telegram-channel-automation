@@ -1,19 +1,22 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from base_app.models import UserRecord
 from django.shortcuts import get_object_or_404
 import asyncio
-from telethon.tl.functions.users import GetFullUserRequest
+#from telethon.tl.functions.users import GetFullUserRequest
 from telethon import TelegramClient
-from telethon.tl.types import InputPeerChannel, InputPeerEmpty, InputPeerUser, InputPhoneContact, PeerUser
+from telethon.tl.types import InputPhoneContact
+#from telethon.tl.types import InputPeerChannel, InputPeerEmpty, InputPeerUser, InputPhoneContact, PeerUser
 from telethon.tl.functions.contacts import ImportContactsRequest
-from telethon.tl.functions.channels import InviteToChannelRequest
+#from telethon.tl.functions.channels import InviteToChannelRequest
 from django.db.models import Q
 from django.contrib import messages
 import datetime
 import os
 from django.contrib.auth import logout
+from base_app.permissions import check_viewing_rights_admin
+
 # Create your views here.
 
 loop = asyncio.get_event_loop()
@@ -101,11 +104,15 @@ def home(request):
             record = get_object_or_404(UserRecord,email=request.user.email)
             print()
             if str(record.time_added_to_group) != "0001-01-01 00:00:00+00:00":
+                if request.user.groups.filter(name='Admin').exists():
+                    return redirect('/view')
                 logout(request)
                 messages.error(request, "Already added to group")
                 messages.warning(request, "Logged out successfully")
                 return redirect('/')
             if str(record.time_registered) != "0001-01-01 00:00:00+00:00":
+                if request.user.groups.filter(name='Admin').exists():
+                    return redirect('/view')
                 logout(request)
                 messages.warning(request,"Logging out...")
                 return render(request, "base_app/notify_user.html", {})
@@ -209,22 +216,17 @@ def logout_user(request):
 #             record.is_added_to_group=True
 #             record.time_added_to_group = datetime.datetime.now()
 #             record.save()
-#
-#
-#dude it is working correctly, go create a user record instance m.m.m. seri
+
 
 @login_required(login_url="/")
+@user_passes_test(check_viewing_rights_admin)
 def view(request):
+    added_records = UserRecord.objects.filter(is_added_to_group=True)
+    registered_records = UserRecord.objects.filter(
+        ~Q(telegram_number='') & ~Q(telegram_number=None) & Q(is_added_to_group=False))
+    print(registered_records)
+    unregistered_records = UserRecord.objects.filter(Q(user=None) | Q(telegram_number=None) | Q(telegram_number=''))
+    return render(request,'base_app/view.html',{'added_records':added_records,"registered_records":registered_records,"unregistered_records":unregistered_records})
 
-    if request.user.is_superuser:
-        added_records = UserRecord.objects.filter(is_added_to_group=True)
-        registered_records = UserRecord.objects.filter(
-            ~Q(telegram_number='') & ~Q(telegram_number=None) & Q(is_added_to_group=False))
-        print(registered_records)
-        unregistered_records = UserRecord.objects.filter(Q(user=None) | Q(telegram_number=None) | Q(telegram_number=''))
-        return render(request,'base_app/view.html',{'added_records':added_records,"registered_records":registered_records,"unregistered_records":unregistered_records})
-
-    else:
-        return render(request,'base_app/unauthorized_access.html')
 
 
