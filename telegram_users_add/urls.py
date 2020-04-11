@@ -22,7 +22,7 @@ urlpatterns = [
     path('',TemplateView.as_view(template_name='index.html')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('home/',baseAppViews.home),
+    path('home/',baseAppViews.home,name='register'),
     path('verify/',baseAppViews.verify,name='validate_pin'),
     path('view/',baseAppViews.view,name='view'),
     path('logout/',baseAppViews.logout_user,name="logout")

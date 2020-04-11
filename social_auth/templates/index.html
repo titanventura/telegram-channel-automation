@@ -1,21 +1,125 @@
-{% extends 'base_app/temp.html' %}
-{% block content %}
+{% extends 'base_app/bootsnip/main.html' %}
 {% load socialaccount %}
-<html>
-  <head>
-    <title>Google Registration</title>
-  </head>
-  <body style="height: 100vh;">
-      <div class="container" style="height: 100%;">
-        <h1>KCT Telegram Channel Login </h1>
-        {% if user.is_authenticated %}
-        <p>Welcome, {{ user.username }} !</p>
-       
-        {% else %}
-        <a style="font-size: 20px" href="{% provider_login_url 'google' %}"><button class="btn btn-large btn-primary">Login with Google</button></a>
-        {% endif %}
-      
-      </div>
-  </body>
-</html>
+{% load static %}
+{% block content %}
+
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+
+    <div class="content-wrapper">
+        <center>
+            <p>
+            <H3 style="color:Black;"> TELEGRAM ACCOUNT - KCT</H3></p>
+        </center>
+        <br><br>
+        <p align=”justify”>
+
+            This is a page for Kumaraguru College Staff and students to sign up in telegram to get in to the offical
+            group.
+            Use login with google with you KCT mail ID and in the next page you will prompted to enter your Telegram
+            number in which you want to be added to the KCT channel.
+            In this channel all offcial information about kct will be shared.<br><br><br>
+            if you are not able to sign up with your email id Kindly contact <a
+                href="mailto:sivramakrishnan.dts@kct.ac.i?Subject=Telegram%20adding" target="_top">Send
+            Mail.</a><br><br>
+            <br>
+        </p>
+
+{#        <p align=”justify”>#}
+{##}
+{#            This is a page for Kumaraguru College Staff and students to sign up in telegram to get in to the offical#}
+{#            group.#}
+{#            Use login with google with you KCT mail ID and in the next page you will prompted to enter your Telegram#}
+{#            number in which you want to be added to the KCT channel.#}
+{#            In this channel all offical information about kct will be shared.<br><br><br>#}
+{#            if you are not able to sign up with your email id Kindly contact <a#}
+{#                href="mailto:sivramakrishnan.dts@kct.ac.i?Subject=Telegram%20adding" target="_top">Send#}
+{#            Mail.</a><br><br>#}
+{#            <br>#}
+{#        </p>#}
+
+        <div class="container" style="height: 100%; display: flex; justify-content: center">
+
+            {% if user.is_authenticated %}
+                {% if user.userrecord %}
+                    <a href="{% url 'logout' %}" class="btn btn-logout btn-primary btn-block">
+                        Logout
+                    </a>
+                {% else %}
+                    <h3>You are not authorized by KCT to register to this channel.Kindly contact iqube@kct.ac.in if it
+                        is a mistake.</h3>
+                {% endif %}
+            {% else %}
+                <a href={% provider_login_url 'google' %}>
+                    <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQeuFKo2qlOyOQb5dedYJbaWQVETY3swhWL5g3wkcFaGVtca8Wj&usqp=CAU'
+                         width="250" height="60">
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <style>
+        *, *:before, *:after {
+            box-sizing: border-box;
+        }
+
+        .g-sign-in-button {
+            margin: 10px;
+            display: inline-block;
+            width: 240px;
+            height: 50px;
+            background-color: #4285f4;
+            color: #fff;
+            border-radius: 1px;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .25);
+            transition: background-color .218s, border-color .218s, box-shadow .218s;
+        }
+
+        .g-sign-in-button:hover {
+            cursor: pointer;
+            -webkit-box-shadow: 0 0 3px 3px rgba(66, 133, 244, .3);
+            box-shadow: 0 0 3px 3px rgba(66, 133, 244, .3);
+        }
+
+        .g-sign-in-button:active {
+            background-color: #3367D6;
+            transition: background-color 0.2s;
+        }
+
+        .g-sign-in-button .content-wrapper {
+            height: 100%;
+            width: 100%;
+            border: 1px solid transparent;
+        }
+
+        .g-sign-in-button img {
+            width: 18px;
+            height: 18px;
+            vertical-align: top !important;
+        }
+
+        .g-sign-in-button .logo-wrapper {
+            padding: 15px;
+            background: #fff;
+            width: 48px;
+            height: 100%;
+            border-radius: 1px;
+            display: inline-block;
+        }
+
+        .g-sign-in-button .text-container {
+            font-family: Roboto, arial, sans-serif;
+            font-weight: 500;
+            letter-spacing: .21px;
+            font-size: 16px;
+            line-height: 48px;
+            vertical-align: top;
+            border: none;
+            display: inline;
+            text-align: center;
+            width: 180px;
+        }
+
+
+    </style>
 {% endblock content %}

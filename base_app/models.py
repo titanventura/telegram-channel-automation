@@ -6,6 +6,11 @@ class UserRecord(models.Model):
     def __str__(self):
         return self.name + ' ' + self.rollno
 
+    def check_admin(self):
+        if(hasattr(self,"user")):
+            return self.user.groups.filter(name="Admin").exists()
+        return False
+
     user = models.OneToOneField(User,on_delete=models.SET_NULL,null=True)
     name = models.CharField(max_length=120,blank=False,null=False)
     rollno = models.CharField(max_length=10,unique=True)

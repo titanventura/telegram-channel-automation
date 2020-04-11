@@ -1,28 +1,39 @@
 {% extends 'base_app/temp.html' %}
+    <script language="JavaScript" src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script language="JavaScript" src="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<script language="JavaScript" src="https://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href=" https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
 {% block content %}
     <center>
     <div style="width:50%">
-    <h1>Registered Users (To be added to the channel)</h1>
-    <table id="datatable" class="table mt-5 table-striped table-bordered nowrap" >
-        <thead>
-            <th>Roll no</th>
-            <th>Name</th>
-            <th>Registered at</th>
-            <th>Email</th>
-            <th>Registered Telegram Number</th>
-            </thead>
-            <tbody>
-            {% for record in registered_records %}
-                <tr>
-                    <td>{{ record.rollno }}</td>
-                    <td>{{ record.name }}</td>
-                    <td>{{ record.time_registered }}</td>
-                    <td>{{ record.email }}</td>
-                    <td>{{ record.telegram_number }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-    </table>
+{#    <h1>Registered Users (To be added to the channel)</h1>#}
+{#    <table id="datatable" class="table mt-5 table-striped table-bordered nowrap" >#}
+{#        <thead>#}
+{#            <th>Roll no</th>#}
+{#            <th>Name</th>#}
+{#            <th>Registered at</th>#}
+{#            <th>Email</th>#}
+{#            <th>Registered Telegram Number</th>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#            {% for record in registered_records %}#}
+{#                <tr>#}
+{#                    <td>{{ record.rollno }}</td>#}
+{#                    <td>{{ record.name }}</td>#}
+{#                    <td>{{ record.time_registered }}</td>#}
+{#                    <td>{{ record.email }}</td>#}
+{#                    <td>{{ record.telegram_number }}</td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+{#            </tbody>#}
+{#    </table>#}
 
     <h1>Not registered users</h1>
     <table id="datatable2" class="table mt-5 table-striped table-bordered nowrap" >
