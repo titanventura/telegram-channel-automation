@@ -18,7 +18,7 @@ import os
 from django.contrib.auth import logout
 from base_app.permissions import check_viewing_rights_admin
 from telethon.errors import SessionPasswordNeededError
-
+import logging
 
 loop = asyncio.get_event_loop()
 api_id = 1238868 #Telegram Admin ID
@@ -50,12 +50,8 @@ async def send_code(ph_no):
 def home(request):
     if request.method == "POST":
         telegram_number = request.POST["telegram_number"]
-        try:
-            hash = loop.run_until_complete(send_code(telegram_number))
-            request.session["hash"] = hash
-        except Exception as e:
-            print(e)
-            return HttpResponse("<center><h1>The Number does not have an associated telegram account. Please Verify. </h1></center>")
+        hash = loop.run_until_complete(send_code(telegram_number))
+        request.session["hash"] = hash
         return render(request,"base_app/code_validator.html",{'num':telegram_number})
 
     if request.user.is_authenticated:

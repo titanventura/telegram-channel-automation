@@ -25,3 +25,4 @@ urllib3==1.25.8
 tqdm
 psycopg2==2.7.1
 pandas
+sentry-sdk
