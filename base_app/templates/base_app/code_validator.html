@@ -6,6 +6,8 @@
                 {% csrf_token %}
                 <label for="OTP">Enter OTP from telegram account</label>
                 <input class="form-control" id="OTP" name="OTP" type="text" minlength="5" maxlength="5">
+                <label for="password">Enter 2 Factor Authentication password if enabled in Telegram.Else leave it blank.</label>
+                <input class="form-control" id="password" name="password" type="password">
                 <input type="hidden" value={{ num }} name="ph_num"/>
                 <button class="btn btn-primary btn-block" type="submit">validate OTP</button>
             </form>
