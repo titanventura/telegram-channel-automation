@@ -18,6 +18,7 @@ import os
 from django.contrib.auth import logout
 from base_app.permissions import check_viewing_rights_admin
 
+
 loop = asyncio.get_event_loop()
 api_id = 1238868 #Telegram Admin ID
 api_hash = "299435e6d3e9689589180dd71beb06e8"
@@ -84,13 +85,15 @@ def home(request):
     return render(request, "base_app/index.html", context)
 
 
-async def verify_code(phone,pin,hash):
+async def verify_code(phone,pin,hash,password):
     client = TelegramClient(f"+91{phone}",api_id=api_id,api_hash=api_hash)
     await client.connect()
     flag = await client.is_user_authorized()
-
     if not flag:
-        await client.sign_in(f"+91{phone}",pin,phone_code_hash=hash)
+        if password != "" and password != None:
+            await client.sign_in(f"+91{phone}",pin,phone_code_hash=hash,password=password)
+        else:
+            await client.sign_in(f"+91{phone}",pin,phone_code_hash=hash)
 
     try:
         contact = InputPhoneContact(client_id=0, phone=f"+91{ph_no}",
@@ -99,8 +102,9 @@ async def verify_code(phone,pin,hash):
         await client(ImportChatInviteRequest('AAAAAFQEmxBonLdyQvsvGQ'))
         await client.disconnect()
 
-        os.listdir()
-        os.remove(f"+91{phone}.session")
+        print(os.listdir())
+        os.remove(os.getcwd()+'/'+f"+91{phone}.session")
+        print(os.listdir())
         return True
     except Exception as e:
         print(e)
@@ -115,7 +119,8 @@ def verify(request):
         pin = request.POST["OTP"]
         phone = request.POST["ph_num"]
         hash = request.session["hash"]
-        flag = loop.run_until_complete(verify_code(phone,pin,hash))
+        password = request.POST["password"]
+        flag = loop.run_until_complete(verify_code(phone,pin,hash,password))
         user_record_obj = UserRecord.objects.get(id=request.user.userrecord.id)
         user_record_obj.telegram_number = f"+91{phone}"
         user_record_obj.time_registered = datetime.datetime.now()

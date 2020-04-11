@@ -2,47 +2,52 @@
 
 {% block content %}
 
-<div class="container">
-    {% if is_authorized %}
+    <div class="container">
+        {% if is_authorized %}
 
-    <h1>Registration Form</h1>
-    <div class="row">
-        <div class="col-sm-12">
-            <label>Name</label>
-            <input class="form-control" value={{name}} disabled>
-            <label>Roll Number</label>
-            <input class="form-control" value={{rollno}} disabled>
-            <label>E-mail</label>
-            <input class="form-control" value={{email}} disabled>
-            <label>Phone Number</label>
-            <input class="form-control" value={{phone}} disabled>
-        </div>
-    </div>
-
-    <div class="row mt-5">
-        <div class="col-sm-12">
-
-            <p>Enter your telegram number.</p>
-
-            <form action="." method="POST" class="form">
-                {% csrf_token %}
-                <label for="telegram_number">Telegram Number (Without country code)</label>
-                <input class="form-control" name="telegram_number" type="text" maxlength="10" minlength="10" id="telegram_number" value={{phone}}
-                    type="text" >
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Get OTP</button>
+            <h1>Registration Form</h1>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label>Name</label>
+                    <input class="form-control" value={{ name }} disabled>
+                    <label>Roll Number</label>
+                    <input class="form-control" value={{ rollno }} disabled>
+                    <label>E-mail</label>
+                    <input class="form-control" value={{ email }} disabled>
+                    <label>Phone Number</label>
+                    <input class="form-control" value={{ phone }} disabled>
                 </div>
+            </div>
 
-            </form>
+            <div class="row mt-5">
+                <div class="col-sm-12">
 
-        </div>
+                    <p>Enter your telegram number.</p>
+
+                    <form action="." method="POST" class="form">
+                        {% csrf_token %}
+                        <label for="telegram_number">Telegram Number (Without country code)</label>
+                        <input class="form-control" name="telegram_number" type="text" maxlength="10" minlength="10"
+                               id="telegram_number" value={{ phone }}
+                                       type="text">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Get OTP</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        {% else %}
+
+
+            <h3>You are not authorized by KCT to register to this channel.Kindly contact iqube@kct.ac.in if it
+                is a mistake.</h3>
+            <a href="{% url 'logout' %}" class="btn btn-logout btn-primary btn-block">
+                Logout
+            </a>
+        {% endif %}
+
     </div>
-    {% else %}
-
-        {% include "base_app/unauthorized_access.html" %}
-
-    {% endif %}
-
-</div>
 
 {% endblock content %}
