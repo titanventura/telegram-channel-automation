@@ -21,9 +21,10 @@ from telethon.errors import SessionPasswordNeededError
 import logging
 
 loop = asyncio.get_event_loop()
-api_id = 1238868 #Telegram Admin ID
-api_hash = "299435e6d3e9689589180dd71beb06e8"
-ph_no = "9488006888"
+api_id = 1215798 #Telegram Admin ID
+api_hash = "eeec3e05b7820f1e154df06fce6da402"
+ph_no = "9487700824"
+channel_link = "AAAAAE5VT0ZMnO1hiA7VfA"
 
 async def get_client():
 
@@ -98,7 +99,7 @@ async def verify_code(phone,pin,hash,password):
         contact = InputPhoneContact(client_id=0, phone=f"+91{ph_no}",
         first_name="KCT_TELEGRAM_BOT_2.0",last_name="")
         await client(ImportContactsRequest([contact]))
-        await client(ImportChatInviteRequest('AAAAAFQEmxBonLdyQvsvGQ'))
+        await client(ImportChatInviteRequest(channel_link))
         await client.disconnect()
 
         print(os.listdir())
