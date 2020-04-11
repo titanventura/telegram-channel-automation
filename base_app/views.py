@@ -17,6 +17,7 @@ import datetime
 import os
 from django.contrib.auth import logout
 from base_app.permissions import check_viewing_rights_admin
+from telethon.errors import SessionPasswordNeededError
 
 
 loop = asyncio.get_event_loop()
@@ -90,10 +91,12 @@ async def verify_code(phone,pin,hash,password):
     await client.connect()
     flag = await client.is_user_authorized()
     if not flag:
-        if password != "" and password != None:
-            await client.sign_in(f"+91{phone}",pin,phone_code_hash=hash,password=password)
-        else:
-            await client.sign_in(f"+91{phone}",pin,phone_code_hash=hash)
+        try:
+            await client.sign_in(f"+91{phone}", pin, phone_code_hash=hash)
+        except SessionPasswordNeededError:
+            await client.sign_in(password=password)
+
+
 
     try:
         contact = InputPhoneContact(client_id=0, phone=f"+91{ph_no}",
