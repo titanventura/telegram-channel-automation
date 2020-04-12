@@ -1,9 +1,7 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required,user_passes_test
 from base_app.models import UserRecord
 from django.shortcuts import get_object_or_404
-import asyncio
 #from telethon.tl.functions.users import GetFullUserRequest
 from telethon import TelegramClient
 from telethon.tl.types import InputPhoneContact
@@ -18,40 +16,36 @@ import os
 from django.contrib.auth import logout
 from base_app.permissions import check_viewing_rights_admin
 from telethon.errors import SessionPasswordNeededError
+import asyncio
 import logging
 
-loop = asyncio.get_event_loop()
+# api_id = 1238868 #Telegram Admin ID
+# api_hash = "299435e6d3e9689589180dd71beb06e8"
+# ph_no = "9488006888"
+# channel_link = "AAAAAFQEmxBonLdyQvsvGQ"
+
+
+#production push
 api_id = 1215798 #Telegram Admin ID
 api_hash = "eeec3e05b7820f1e154df06fce6da402"
 ph_no = "9487700824"
 channel_link = "AAAAAE5VT0ZMnO1hiA7VfA"
 
-async def get_client():
-
-    client = TelegramClient(f"+91{ph_no}",api_id=api_id,api_hash=api_hash)
-    await client.connect()
-    flag = await client.is_user_authorized()
-    if flag:
-        return (client,True)
-    
-    return (client,False)
-
-async def send_code(ph_no):
-    client = TelegramClient(f"+91{ph_no}",api_id=api_id,api_hash=api_hash)
+async def send_code(ph_no2):
+    client = TelegramClient(f"+91{ph_no2}", api_id=api_id, api_hash=api_hash)
     await client.connect()
     auth_client = await client.is_user_authorized()
     print(auth_client)
     if not auth_client:
-        sent = await client.send_code_request(f"+91{ph_no}")
+        sent = await client.send_code_request(f"+91{ph_no2}")
         return sent.phone_code_hash
-
 
 
 @login_required(login_url="/")
 def home(request):
     if request.method == "POST":
         telegram_number = request.POST["telegram_number"]
-        hash = loop.run_until_complete(send_code(telegram_number))
+        hash = asyncio.run(send_code(telegram_number))
         request.session["hash"] = hash
         return render(request,"base_app/code_validator.html",{'num':telegram_number})
 
@@ -84,7 +78,7 @@ def home(request):
 
 
 async def verify_code(phone,pin,hash,password):
-    client = TelegramClient(f"+91{phone}",api_id=api_id,api_hash=api_hash)
+    client = TelegramClient(f"+91{phone}", api_id=api_id, api_hash=api_hash)
     await client.connect()
     flag = await client.is_user_authorized()
     if not flag:
@@ -94,21 +88,36 @@ async def verify_code(phone,pin,hash,password):
             await client.sign_in(password=password)
 
 
-
+    # Joining the channel
     try:
         contact = InputPhoneContact(client_id=0, phone=f"+91{ph_no}",
-        first_name="KCT_TELEGRAM_BOT_2.0",last_name="")
+        first_name="KCT_TELEGRAM",last_name="")
         await client(ImportContactsRequest([contact]))
-        await client(ImportChatInviteRequest(channel_link))
-        await client.disconnect()
-
-        print(os.listdir())
-        os.remove(os.getcwd()+'/'+f"+91{phone}.session")
-        print(os.listdir())
-        return True
+        updates = await client(ImportChatInviteRequest(channel_link))
+        if updates:
+            val = True
     except Exception as e:
         print(e)
-        return False
+        logging.error('An exception happened in importing contact or chat invite : '+str(e)+' class: '+ str(type(e)))
+        val = False
+
+    # Disconnecting client
+    try:
+        await client.disconnect()
+    except Exception as e:
+        logging.error('An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+        print(e)
+
+    # Removing corresponding session file
+    try:
+        print(os.listdir())
+        os.remove(os.getcwd() + '\\' + f"+91{phone}.session")
+        print(os.listdir())
+    except Exception as e:
+        logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' +str(type(e)))
+        print(e)
+
+    return val
 
 
 
@@ -120,14 +129,16 @@ def verify(request):
         phone = request.POST["ph_num"]
         hash = request.session["hash"]
         password = request.POST["password"]
-        flag = loop.run_until_complete(verify_code(phone,pin,hash,password))
-        user_record_obj = UserRecord.objects.get(id=request.user.userrecord.id)
-        user_record_obj.telegram_number = f"+91{phone}"
-        user_record_obj.time_registered = datetime.datetime.now()
-        user_record_obj.time_added_to_group = datetime.datetime.now()
-        user_record_obj.is_added_to_group = True
-        user_record_obj.save()
-        logout(request)
+
+        flag = asyncio.run(verify_code(phone,pin,hash,password))
+        if flag:
+            user_record_obj = UserRecord.objects.get(id=request.user.userrecord.id)
+            user_record_obj.telegram_number = f"+91{phone}"
+            user_record_obj.time_registered = datetime.datetime.now()
+            user_record_obj.time_added_to_group = datetime.datetime.now()
+            user_record_obj.is_added_to_group = True
+            user_record_obj.save()
+            logout(request)
         return render(request,"base_app/notify_user.html",{})
 
 @login_required(login_url="/")

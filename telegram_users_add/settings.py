@@ -27,9 +27,9 @@ DEBUG = not IS_PRODUCTION
 
 ALLOWED_HOSTS = ['*']
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-SITE_ID = 2
+SITE_ID = 3
 
 LOGIN_REDIRECT_URL = '/home/'
 # Application definition
@@ -177,11 +177,13 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 import sentry_sdk
+import logging
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
 
 sentry_sdk.init(
     dsn="https://88fa83118b9641b7a4120cf116b61689@o376320.ingest.sentry.io/5196990",
-    integrations=[DjangoIntegration()],
+    integrations=[DjangoIntegration(),LoggingIntegration(event_level=logging.ERROR)],
 
     # If you wish to associate users to errors (assuming you are using
     # django.contrib.auth) you may enable sending PII data.
