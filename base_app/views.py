@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.decorators import login_required,user_passes_test
 from base_app.models import UserRecord
 from django.shortcuts import get_object_or_404
@@ -15,7 +15,7 @@ import datetime
 import os
 from django.contrib.auth import logout
 from base_app.permissions import check_viewing_rights_admin
-from telethon.errors import SessionPasswordNeededError,PhoneCodeEmptyError,PhoneCodeExpiredError,PhoneCodeInvalidError,PhoneNumberFloodError,PhoneNumberUnoccupiedError,PhoneNumberInvalidError
+from telethon.errors import SessionPasswordNeededError,PhoneCodeEmptyError,PhoneCodeExpiredError,PhoneCodeInvalidError,FloodWaitError,PhoneNumberFloodError,PhoneNumberUnoccupiedError,PhoneNumberInvalidError,AuthKeyUnregisteredError
 import asyncio
 import logging
 
@@ -42,6 +42,23 @@ async def send_code(req,phone):
             return sent.phone_code_hash
         except PhoneNumberFloodError:
             messages.error(req,'You have reached maximum number of attempts.')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'logout'
+        except FloodWaitError:
+            messages.error(req, 'You have reached maximum number of attempts.')
             try:
                 await client.disconnect()
             except Exception as e:
@@ -199,6 +216,24 @@ async def verify_code(req,phone,pin,hash,password):
                 print(e)
             return 'logout'
 
+        except FloodWaitError:
+            messages.error(req,'You have reached maximum number of attempts.')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'logout'
+
         except PhoneNumberUnoccupiedError:
             messages.error(req,'Please provide a number associated with telegram.')
             try:
@@ -279,6 +314,8 @@ async def verify_code(req,phone,pin,hash,password):
         updates = await client(ImportChatInviteRequest(channel_link))
         if updates:
             val = True
+    except AuthKeyUnregisteredError:
+        return 'retry'
     except Exception as e:
         print(e)
         logging.error('An exception happened in importing contact or chat invite : '+str(e)+' class: '+ str(type(e)))
@@ -325,10 +362,26 @@ def verify(request):
             user_record_obj.is_added_to_group = True
             user_record_obj.save()
             logout(request)
+        if flag=='retry':
+            flag2 = asyncio.run(verify_code(request, phone, pin, hash, password))
+            if flag2 == 'logout':
+                return redirect('logout')
+            if flag2 == 'register':
+                return redirect('register')
+            if flag2 == True:
+                user_record_obj.telegram_number = f"+91{phone}"
+                user_record_obj.time_registered = datetime.datetime.now()
+                user_record_obj.time_added_to_group = datetime.datetime.now()
+                user_record_obj.is_added_to_group = True
+                user_record_obj.save()
+                logout(request)
+            else:
+                return render(request, "base_app/error.html")
         if flag==False:
             return render(request,"base_app/error.html")
         return render(request,"base_app/notify_user.html",{})
-
+    else:
+        return HttpResponse('<b>GET not allowed for this url.</b>')
 @login_required(login_url="/")
 def logout_user(request):
     if request.user.is_authenticated:
@@ -345,6 +398,5 @@ def view(request):
     print(registered_records)
     unregistered_records = UserRecord.objects.filter(Q(user=None) | Q(telegram_number=None) | Q(telegram_number=''))
     return render(request,'base_app/view.html',{'added_records':added_records,"registered_records":registered_records,"unregistered_records":unregistered_records})
-
 
 
