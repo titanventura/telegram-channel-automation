@@ -15,7 +15,7 @@ import datetime
 import os
 from django.contrib.auth import logout
 from base_app.permissions import check_viewing_rights_admin
-from telethon.errors import SessionPasswordNeededError
+from telethon.errors import SessionPasswordNeededError,PhoneCodeEmptyError,PhoneCodeExpiredError,PhoneCodeInvalidError,PhoneNumberFloodError,PhoneNumberUnoccupiedError,PhoneNumberInvalidError
 import asyncio
 import logging
 
@@ -31,21 +31,115 @@ api_hash = "eeec3e05b7820f1e154df06fce6da402"
 ph_no = "9487700824"
 channel_link = "AAAAAE5VT0ZMnO1hiA7VfA"
 
-async def send_code(ph_no2):
-    client = TelegramClient(f"+91{ph_no2}", api_id=api_id, api_hash=api_hash)
+async def send_code(req,phone):
+    client = TelegramClient(f"+91{phone}", api_id=api_id, api_hash=api_hash)
     await client.connect()
     auth_client = await client.is_user_authorized()
     print(auth_client)
     if not auth_client:
-        sent = await client.send_code_request(f"+91{ph_no2}")
-        return sent.phone_code_hash
+        try:
+            sent = await client.send_code_request(f"+91{phone}")
+            return sent.phone_code_hash
+        except PhoneNumberFloodError:
+            messages.error(req,'You have reached maximum number of attempts.')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'logout'
+
+        except PhoneNumberUnoccupiedError:
+            messages.error(req,'Please provide a number associated with telegram.')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'register'
+
+        except PhoneNumberInvalidError:
+            messages.error(req,'Please enter a valid Phone number')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'register'
+
+        except PhoneCodeEmptyError:
+            messages.error(req,'Please enter a valid OTP')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'register'
+
+        except PhoneCodeExpiredError:
+            messages.error(req,'Your OTP  has expired.')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'register'
 
 
 @login_required(login_url="/")
 def home(request):
     if request.method == "POST":
         telegram_number = request.POST["telegram_number"]
-        hash = asyncio.run(send_code(telegram_number))
+        hash = asyncio.run(send_code(request,telegram_number))
+        if hash == 'register':
+            return redirect('register')
+        if hash == 'logout':
+            return redirect('logout')
         request.session["hash"] = hash
         return render(request,"base_app/code_validator.html",{'num':telegram_number})
 
@@ -77,7 +171,7 @@ def home(request):
     return render(request, "base_app/index.html", context)
 
 
-async def verify_code(phone,pin,hash,password):
+async def verify_code(req,phone,pin,hash,password):
     client = TelegramClient(f"+91{phone}", api_id=api_id, api_hash=api_hash)
     await client.connect()
     flag = await client.is_user_authorized()
@@ -87,6 +181,95 @@ async def verify_code(phone,pin,hash,password):
         except SessionPasswordNeededError:
             await client.sign_in(password=password)
 
+        except PhoneNumberFloodError:
+            messages.error(req,'You have reached maximum number of attempts.')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'logout'
+
+        except PhoneNumberUnoccupiedError:
+            messages.error(req,'Please provide a number associated with telegram.')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'register'
+
+        except PhoneCodeInvalidError:
+            messages.error(req,'Please enter a valid OTP')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'register'
+
+        except PhoneCodeEmptyError:
+            messages.error(req,'Please enter a valid OTP')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'register'
+
+        except PhoneCodeExpiredError:
+            messages.error(req,'Your OTP  has expired.')
+            try:
+                await client.disconnect()
+            except Exception as e:
+                logging.error(
+                    'An exception happened in disconnecting client after op. : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+
+            try:
+                print(os.listdir())
+                os.remove(os.getcwd() + '/' + f"+91{phone}.session")
+                print(os.listdir())
+            except Exception as e:
+                logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' + str(type(e)))
+                print(e)
+            return 'register'
 
     # Joining the channel
     try:
@@ -111,7 +294,7 @@ async def verify_code(phone,pin,hash,password):
     # Removing corresponding session file
     try:
         print(os.listdir())
-        os.remove(os.getcwd() + '\\' + f"+91{phone}.session")
+        os.remove(os.getcwd() + '/' + f"+91{phone}.session")
         print(os.listdir())
     except Exception as e:
         logging.error('An exception happened in session file removal : ' + str(e) + ' class: ' +str(type(e)))
@@ -129,10 +312,13 @@ def verify(request):
         phone = request.POST["ph_num"]
         hash = request.session["hash"]
         password = request.POST["password"]
-
-        flag = asyncio.run(verify_code(phone,pin,hash,password))
-        if flag:
-            user_record_obj = UserRecord.objects.get(id=request.user.userrecord.id)
+        user_record_obj = UserRecord.objects.get(id=request.user.userrecord.id)
+        flag = asyncio.run(verify_code(request,phone,pin,hash,password))
+        if flag == 'logout':
+            return redirect('logout')
+        if flag == 'register':
+            return redirect('register')
+        if flag==True:
             user_record_obj.telegram_number = f"+91{phone}"
             user_record_obj.time_registered = datetime.datetime.now()
             user_record_obj.time_added_to_group = datetime.datetime.now()
