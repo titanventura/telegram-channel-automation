@@ -1,0 +1,31 @@
+{% extends "base_app/bootsnip/main.html" %}
+
+{% block content %}
+
+    <div class="container">
+    <div class="jumbotron">
+        <h3 class="text-black-50">
+           There was an error in telegram API side.Try once again after few minutes. If problem Persist contact <a href="mailto:sivramakrishnan.dts@kct.ac.in?Subject=Telegram%20Error" target="_top">Send
+            Mail.</a>
+        </h3>
+    </div>
+    </div>
+
+    <style>
+    .success{
+        background-color: #1e7e34;
+        opacity: 0.1;
+        color: darkgreen;
+    }
+    </style>
+
+    <script>
+        function redirect(){
+            const element = document.createElement("a");
+            element.href = "/"
+            element.click()
+        }
+
+        setTimeout(redirect,5000)
+    </script>
+{% endblock content %}

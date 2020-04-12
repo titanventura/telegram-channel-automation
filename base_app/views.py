@@ -325,6 +325,8 @@ def verify(request):
             user_record_obj.is_added_to_group = True
             user_record_obj.save()
             logout(request)
+        if flag==False:
+            return render(request,"base_app/error.html")
         return render(request,"base_app/notify_user.html",{})
 
 @login_required(login_url="/")
