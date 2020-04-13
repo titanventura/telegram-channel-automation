@@ -21,6 +21,9 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
 
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 </head>
 
@@ -61,6 +64,12 @@
                     <a class="nav-link" href="{% url 'view' %}">
                         <i class="fas fa-fw fa-user"></i>
                         <span>View Registrations</span></a>
+                </li>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="{% url 'check_errors' %}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>View Errors</span></a>
                 </li>
                     {% else %}
                     <li class="nav-item">

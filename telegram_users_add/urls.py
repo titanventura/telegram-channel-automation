@@ -25,5 +25,6 @@ urlpatterns = [
     path('home/',baseAppViews.home,name='register'),
     path('verify/',baseAppViews.verify,name='validate_pin'),
     path('view/',baseAppViews.view,name='view'),
-    path('logout/',baseAppViews.logout_user,name="logout")
+    path('logout/',baseAppViews.logout_user,name="logout"),
+    path('errors/',baseAppViews.check_errors,name='check_errors')
 ]

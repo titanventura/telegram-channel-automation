@@ -24,18 +24,18 @@
 
                     <p>Enter your telegram number.</p>
 
-                    <form action="." method="POST" class="form">
+                    <form action="." method="POST" class="form" id="submit_form">
                         {% csrf_token %}
                         <label for="telegram_number">Telegram Number (Without country code)</label>
                         <input class="form-control" name="telegram_number" type="text" maxlength="10" minlength="10"
                                id="telegram_number" value={{ phone }}
                                        type="text">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Get OTP</button>
+
                         </div>
 
                     </form>
-
+                    <button id="link" class="btn btn-primary">Get OTP</button>
                 </div>
             </div>
         {% else %}
@@ -50,4 +50,28 @@
 
     </div>
 
+    <script>
+        // Alert Redirect to Another Link
+		$(document).on('click', '#link', function(e) {
+		    swal({
+				title: "Are you sure?",
+				text: "Is this the Active Telegram Number!!",
+				type: "warning",
+				confirmButtonText: "Yes, Proceed!",
+				showCancelButton: true
+		    })
+		    	.then((result) => {
+					if (result.value) {
+					    console.log(result.value)
+					    document.getElementById('submit_form').submit()
+					} else if (result.dismiss === 'cancel') {
+					    swal(
+					      'Cancelled',
+					      'Your stay here :)',
+					      'error'
+					    )
+					}
+				})
+		});
+    </script>
 {% endblock content %}
