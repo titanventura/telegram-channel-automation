@@ -8,7 +8,6 @@ Django==3.0.5
 django-allauth==0.41.0
 django-fontawesome-5==1.0.18
 django-mathfilters==1.0.0
-gunicorn==19.7.1
 idna==2.9
 oauthlib==3.1.0
 pyaes==1.6.1
@@ -23,6 +22,4 @@ static3==0.7.0
 Telethon==1.11.3
 urllib3==1.25.8
 tqdm
-psycopg2==2.7.1
 pandas
-sentry-sdk

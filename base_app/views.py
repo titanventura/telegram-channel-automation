@@ -2,14 +2,10 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.decorators import login_required,user_passes_test
 from base_app.models import UserRecord
 from django.shortcuts import get_object_or_404
-#from telethon.tl.functions.users import GetFullUserRequest
 from telethon import TelegramClient
 from telethon.tl.types import InputPhoneContact
-#from telethon.tl.types import InputPeerChannel, InputPeerEmpty, InputPeerUser, InputPhoneContact, PeerUser
 from telethon.tl.functions.contacts import ImportContactsRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
-#from telethon.tl.functions.channels import InviteToChannelRequest
-# from django.
 from django.db.models import Q
 from django.contrib import messages
 import datetime
@@ -19,7 +15,6 @@ from base_app.permissions import check_viewing_rights_admin
 from telethon.errors import SessionPasswordNeededError,PhoneCodeEmptyError,PhoneCodeExpiredError,PhoneCodeInvalidError,FloodWaitError,PhoneNumberFloodError,PhoneNumberUnoccupiedError,PhoneNumberInvalidError,AuthKeyUnregisteredError,PasswordEmptyError,PasswordHashInvalidError
 import asyncio
 import logging
-from asgiref.sync import sync_to_async
 
 api_id = 1238868 #Telegram Admin ID
 api_hash = "299435e6d3e9689589180dd71beb06e8"
