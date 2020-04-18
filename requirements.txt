@@ -3,11 +3,9 @@ asyncio==3.4.3
 certifi==2020.4.5.1
 chardet==3.0.4
 defusedxml==0.6.0
-dj-static==0.0.6
 Django==3.0.5
 django-allauth==0.41.0
 django-fontawesome-5==1.0.18
-django-mathfilters==1.0.0
 idna==2.9
 oauthlib==3.1.0
 pyaes==1.6.1

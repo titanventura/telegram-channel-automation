@@ -200,3 +200,7 @@ dmypy.json
 .idea/
 .idea/telegram_users_add.iml
 .idea/workspace.xml
+
+
+*.pyc
+__ pycache __

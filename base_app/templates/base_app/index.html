@@ -1,4 +1,4 @@
-{% extends 'base_app/bootsnip/main.html' %}
+{% extends 'base_app/base.html' %}
 
 {% block content %}
 
@@ -10,8 +10,6 @@
                 <div class="col-sm-12">
                     <label>Name</label>
                     <input class="form-control" value={{ name }} disabled>
-                    <label>Roll Number</label>
-                    <input class="form-control" value={{ rollno }} disabled>
                     <label>E-mail</label>
                     <input class="form-control" value={{ email }} disabled>
                     <label>Phone Number</label>
@@ -41,7 +39,7 @@
         {% else %}
 
 
-            <h3>You are not authorized by KCT to register to this channel.Kindly contact iqube@kct.ac.in if it
+            <h3>You are not authorized to register to this channel.Kindly contact admin if it
                 is a mistake.</h3>
             <a href="{% url 'logout' %}" class="btn btn-logout btn-primary btn-block">
                 Logout

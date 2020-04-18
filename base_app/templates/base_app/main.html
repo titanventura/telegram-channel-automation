@@ -1,55 +1,16 @@
-{% extends 'base_app/bootsnip/main.html' %}
+{% extends 'base_app/base.html' %}
 {% load socialaccount %}
 {% load static %}
 {% block content %}
 
-    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
 
-
+<center>
     <div class="content-wrapper">
-        <center>  <p style="color:Black;">Welcome to Kumaraguru Institutions </p>
+        <p style="color:Black;">Welcome to Telegram Channel Registration </p>
 
-                 <H3 style="color:Black;"> Official Telegram Channel Registration</H3></p> </center> <br><br><br>
-            <p align=”justify”>
+                 <H3 style="color:Black;"> Official Telegram Channel Registration</H3></p> <br><br><br>
 
-
-We request you to register to Kumaraguru Institutions Official Telegram Channel for receiving timely updates from Management.<br>
-
-·         Please authenticate yourself with your official email id and password.<br>
-
-·         Enter the mobile number that you have registered with your Telegram account.<br>
-
-·         This number will be subscribed to Kumaraguru Institution’s Telegram Channel.<br>
-
-·         If you have issues with signup, please reach out to <a href="mailto:sivramakrishnan.dts@kct.ac.in?Subject=Telegram%20adding" target="_top">Send
-            Mail.</a>
-
-        <br><br>
-{#        <p align=”justify”>#}
-{##}
-{#            This is a page for Kumaraguru College Staff and students to sign up in telegram to get in to the offical#}
-{#            group.#}
-{#            Use login with google with you KCT mail ID and in the next page you will prompted to enter your Telegram#}
-{#            number in which you want to be added to the KCT channel.#}
-{#            In this channel all offcial information about kct will be shared.<br><br><br>#}
-{#            if you are not able to sign up with your email id Kindly contact <a#}
-{#                href="mailto:sivramakrishnan.dts@kct.ac.i?Subject=Telegram%20adding" target="_top">Send#}
-{#            Mail.</a><br><br>#}
-{#            <br>#}
-{#        </p>#}
-
-{#        <p align=”justify”>#}
-{##}
-{#            This is a page for Kumaraguru College Staff and students to sign up in telegram to get in to the offical#}
-{#            group.#}
-{#            Use login with google with you KCT mail ID and in the next page you will prompted to enter your Telegram#}
-{#            number in which you want to be added to the KCT channel.#}
-{#            In this channel all offical information about kct will be shared.<br><br><br>#}
-{#            if you are not able to sign up with your email id Kindly contact <a#}
-{#                href="mailto:sivramakrishnan.dts@kct.ac.i?Subject=Telegram%20adding" target="_top">Send#}
-{#            Mail.</a><br><br>#}
-{#            <br>#}
-{#        </p>#}
 
         <div class="container" style="height: 100%; display: flex; justify-content: center">
 
@@ -59,7 +20,7 @@ We request you to register to Kumaraguru Institutions Official Telegram Channel 
                         Logout
                     </a>
                 {% else %}
-                    <h3>You are not authorized by KCT to register to this channel.Kindly contact iqube@kct.ac.in if it
+                    <h3>You are not authorized to register to this channel.Kindly contact admin if it
                         is a mistake.</h3>
                 {% endif %}
             {% else %}
@@ -70,7 +31,7 @@ We request you to register to Kumaraguru Institutions Official Telegram Channel 
             {% endif %}
         </div>
     </div>
-
+</center>
     <style>
         *, *:before, *:after {
             box-sizing: border-box;

@@ -28,8 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',    
-    
-    "social_auth",   # <--
+
     "base_app",
     "allauth",   # <--
     "allauth.account",   # <--
@@ -102,7 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -142,3 +141,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 }
+
+API_HASH = '299435e6d3e9689589180dd71beb06e8'
+API_ID = 1238868
+CHANNEL_HASH = "AAAAAFQEmxBonLdyQvsvGQ"
