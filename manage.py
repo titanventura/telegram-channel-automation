@@ -2,9 +2,13 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+from dotenv import load_dotenv
 
 def main():
+    load_dotenv()
+    if(os.getenv("TELEGRAM_API_ID") == None or os.getenv("TELEGRAM_API_HASH")==None):
+        print("Server unable to start because of insufficient TELEGRAM API credentials")
+        return
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'telegram_users_add.settings')
     try:
         from django.core.management import execute_from_command_line

@@ -21,3 +21,5 @@ Telethon==1.11.3
 urllib3==1.25.8
 tqdm
 pandas
+dj_static
+python-dotenv

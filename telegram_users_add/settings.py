@@ -1,5 +1,6 @@
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -29,11 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',    
 
-    "base_app",
-    "allauth",   # <--
-    "allauth.account",   # <--
-    "allauth.socialaccount",   # <--
-    "allauth.socialaccount.providers.google",   # <--
+    # Custom Apps in the Project.
+    "base_app"
 ]
 
 MIDDLEWARE = [
@@ -125,22 +123,39 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-AUTHENTICATION_BACKENDS = (
- 'django.contrib.auth.backends.ModelBackend',
- 'allauth.account.auth_backends.AuthenticationBackend',
- )
+AUTHENTICATION_BACKENDS = [
+ 'django.contrib.auth.backends.ModelBackend'
+ ]
 
-SOCIALACCOUNT_PROVIDERS = {
-'google': {
-    'SCOPE': [
-        'profile',
-        'email',
-    ],
-    'AUTH_PARAMS': {
-        'access_type': 'online',
+
+# A SETTING from the config file that can differentiate between normal authentication and google OAuth.
+
+OAUTH_ENABLED = False
+
+if(os.getenv('GOOGLE_CLIENT_ID')!= None and os.getenv('GOOGLE_CLIENT_SECRET')!= None):
+    oauth_client_id,oauth_client_secret = os.getenv('GOOGLE_CLIENT_ID'),os.getenv('GOOGLE_CLIENT_SECRET')
+    OAUTH_ENABLED = True
+    AUTHENTICATION_BACKENDS += ['allauth.account.auth_backends.AuthenticationBackend']
+    SOCIALACCOUNT_PROVIDERS = {
+        'google': {
+            'SCOPE': [
+                'profile',
+                'email',
+            ],
+            'AUTH_PARAMS': {
+                'access_type': 'online',
+            }
+        }
     }
-}
-}
+
+    INSTALLED_APPS +=[
+    "allauth",   # <--
+    "allauth.account",   # <--
+    "allauth.socialaccount",   # <--
+    "allauth.socialaccount.providers.google",   # <--
+    ]
+
+
 
 API_HASH = '299435e6d3e9689589180dd71beb06e8'
 API_ID = 1238868

@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect,HttpResponse
+import json
 from django.contrib.auth.decorators import login_required,user_passes_test
 from base_app.models import UserRecord
 from django.shortcuts import get_object_or_404
@@ -9,7 +10,7 @@ from django.contrib.auth import logout
 from base_app.permissions import check_viewing_rights_admin
 import asyncio
 from base_app.tasks import send_code,verify_code
-
+from django.contrib.auth.models import User
 
 @login_required(login_url="/")
 def home(request):
@@ -144,3 +145,11 @@ def view(request):
 def check_errors(request):
     error_records = UserRecord.objects.filter(Q(is_added_to_group=False) & ~Q(reason_for_error=''))
     return render(request,'base_app/error_view.html',{'error_records':error_records})
+
+
+def check_user(request):
+    if(request.method == "GET"):
+        email = request.GET["email"]
+        if(User.objects.filter(email=email).exists()):
+            return HttpResponse(json.dumps({'message':'exists'}), content_type='application/json')
+        return HttpResponse(json.dumps({'message':'does_not_exist'}), content_type='application/json')
