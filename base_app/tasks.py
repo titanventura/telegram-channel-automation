@@ -1,11 +1,9 @@
 from telethon import TelegramClient
-from telethon.tl.types import InputPhoneContact
-from telethon.tl.functions.contacts import ImportContactsRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 from django.contrib import messages
 import datetime
 import os
-from telethon.errors import SessionPasswordNeededError,PhoneCodeEmptyError,PhoneCodeExpiredError,PhoneCodeInvalidError,FloodWaitError,PhoneNumberFloodError,PhoneNumberUnoccupiedError,PhoneNumberInvalidError,AuthKeyUnregisteredError,PasswordEmptyError,PasswordHashInvalidError
+from telethon.errors import UserAlreadyParticipantError,SessionPasswordNeededError,PhoneCodeEmptyError,PhoneCodeExpiredError,PhoneCodeInvalidError,FloodWaitError,PhoneNumberFloodError,PhoneNumberUnoccupiedError,PhoneNumberInvalidError,AuthKeyUnregisteredError,PasswordEmptyError,PasswordHashInvalidError
 from django.conf import settings
 api_id =settings.API_ID
 api_hash = settings.API_HASH
@@ -190,14 +188,16 @@ async def verify_code(req,phone,pin,hash,password):
         updates = await client(ImportChatInviteRequest(channel_hash))
         if updates:
             val = True
+    except UserAlreadyParticipantError:
+        messages.error(req, 'This number is already added to the telegram channel.')
+        err = 'Already Participant Error |' + str(datetime.datetime.now())
+        flag = 'register'
     except AuthKeyUnregisteredError:
-        return 'retry'
+        flag =  'retry'
     except Exception as e:
         print(e)
         err = str(e) + '|' + str(datetime.datetime.now())
-        pass
-        return err,'retry'
-
+        flag = 'retry'
 
     # Disconnecting client
     try:
@@ -213,7 +213,7 @@ async def verify_code(req,phone,pin,hash,password):
     except Exception as e:
         pass
 
-    return '',val
+    return err, flag
 
 
 async def send_code(req,phone):

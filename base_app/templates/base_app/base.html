@@ -25,6 +25,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+
 </head>
 
 <body id="page-top">
@@ -54,7 +55,7 @@
                 <li class="nav-item">
                     <span class="nav-link">User: {{ request.user.userrecord.name }}</span>
                 </li>
-                {% if request.user.userrecord.check_admin %}
+                {% if request.user.userrecord.check_admin or request.user.is_superuser %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'register' %}">
                         <i class="fas fa-fw fa-user"></i>
@@ -64,6 +65,11 @@
                     <a class="nav-link" href="{% url 'view' %}">
                         <i class="fas fa-fw fa-user"></i>
                         <span>View Registrations</span></a>
+                </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="{% url 'import' %}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>Upload User Records</span></a>
                 </li>
                     </li>
                     <li class="nav-item">

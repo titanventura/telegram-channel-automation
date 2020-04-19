@@ -16,7 +16,7 @@ ALLOWED_HOSTS = ['*']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-SITE_ID = 2
+
 
 LOGIN_REDIRECT_URL = '/home/'
 # Application definition
@@ -129,9 +129,7 @@ AUTHENTICATION_BACKENDS = [
 
 
 # A SETTING from the config file that can differentiate between normal authentication and google OAuth.
-
 OAUTH_ENABLED = False
-
 if(os.getenv('GOOGLE_CLIENT_ID')!= None and os.getenv('GOOGLE_CLIENT_SECRET')!= None):
     oauth_client_id,oauth_client_secret = os.getenv('GOOGLE_CLIENT_ID'),os.getenv('GOOGLE_CLIENT_SECRET')
     OAUTH_ENABLED = True
@@ -147,7 +145,6 @@ if(os.getenv('GOOGLE_CLIENT_ID')!= None and os.getenv('GOOGLE_CLIENT_SECRET')!= 
             }
         }
     }
-
     INSTALLED_APPS +=[
     "allauth",   # <--
     "allauth.account",   # <--
@@ -157,6 +154,6 @@ if(os.getenv('GOOGLE_CLIENT_ID')!= None and os.getenv('GOOGLE_CLIENT_SECRET')!= 
 
 
 
-API_HASH = '299435e6d3e9689589180dd71beb06e8'
-API_ID = 1238868
-CHANNEL_HASH = "AAAAAFQEmxBonLdyQvsvGQ"
+API_HASH = os.getenv('TELEGRAM_API_HASH')
+API_ID = os.getenv('TELEGRAM_API_ID')
+CHANNEL_HASH = os.getenv('CHANNEL_HASH')

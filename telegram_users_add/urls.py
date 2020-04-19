@@ -33,7 +33,8 @@ urlpatterns = [
     path('view/',baseAppViews.view,name='view'),
     path('logout/',baseAppViews.logout_user,name="logout"),
     path('errors/',baseAppViews.check_errors,name='check_errors'),
-    path('user_info/',baseAppViews.check_user,name="user_check")
+    path('user_info/',baseAppViews.check_user,name="user_check"),
+    path('import/',baseAppViews.import_users,name='import')
 ]
 
 if(settings.OAUTH_ENABLED):
@@ -41,7 +42,7 @@ if(settings.OAUTH_ENABLED):
     from django.contrib.sites.models import Site
     from allauth.socialaccount.models import SocialAccount, SocialApp
 
-    social_account = SocialApp.objects.get_or_create(provider="google",name="Google API 2bro",client_id =str(os.getenv("GOOGLE_CLIENT_ID")),secret=str(os.getenv("GOOGLE_CLIENT_SECRET")))
+    social_account = SocialApp.objects.get_or_create(provider="google",name="Google API",client_id =str(os.getenv("GOOGLE_CLIENT_ID")),secret=str(os.getenv("GOOGLE_CLIENT_SECRET")))
     if(social_account[1] !=False):
         social_account[0].sites.add(Site.objects.first())
     print(social_account[0].provider)
@@ -51,5 +52,7 @@ if(settings.OAUTH_ENABLED):
         ]
 
 else:
-    urlpatterns += [path('',TemplateView.as_view(template_name='base_app/user_creation.html'))]
+    urlpatterns += [path('',TemplateView.as_view(template_name='base_app/user_creation.html')),
+                    path('login/',baseAppViews.login_user,name='login'),
+                    path('register/',baseAppViews.register_user,name='register_user')]
     print("success")

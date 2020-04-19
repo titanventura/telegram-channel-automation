@@ -1,0 +1,50 @@
+{% extends 'base_app/base.html' %}
+
+{% block content %}
+    <div class="container">
+    <h4>Guidelines to be followed Strictly</h4>
+        <ol>
+            <li>
+                The File must be one with a csv extension.
+            </li>
+            <li>
+                The CSV file must contain the following fields necessarily with the exact string match
+                <ol>
+                    <li>name</li>
+                    <li>phone</li>
+                    <li>email</li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+    <form method="post" enctype="multipart/form-data" id="submit_form">
+    {% csrf_token %}
+    <input type="file" name="file">
+  </form>
+    <button class="btn btn-primary block" id="link">Upload Users</button>
+    <script>
+        // Alert Redirect to Another Link
+		$(document).on('click', '#link', function(e) {
+		    swal({
+				title: "Are you sure?",
+				text: "Do you want to add these users?!!",
+				type: "warning",
+				confirmButtonText: "Yes, Proceed!",
+				showCancelButton: true
+		    })
+		    	.then((result) => {
+					if (result.value) {
+					    console.log(result.value)
+					    document.getElementById('submit_form').submit()
+					} else if (result.dismiss === 'cancel') {
+					    swal(
+					      'Cancelled',
+					      'Your stay here :)',
+					      'error'
+					    )
+					}
+				})
+		});
+    </script>
+{% endblock content %}
+

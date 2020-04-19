@@ -6,16 +6,19 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib import messages
 import datetime
-from django.contrib.auth import logout
+from django.contrib.auth import logout,authenticate,login
 from base_app.permissions import check_viewing_rights_admin
 import asyncio
 from base_app.tasks import send_code,verify_code
 from django.contrib.auth.models import User
+import random
+from django.core.files.storage import FileSystemStorage
+import csv,os
 
 @login_required(login_url="/")
 def home(request):
     if request.method == "POST":
-        telegram_number = request.POST["telegram_number"]
+        telegram_number = request.POST['countryCode']+request.POST["telegram_number"]
         user_record = request.user.userrecord
         err,hash = asyncio.run(send_code(request,telegram_number))
         if err=='':
@@ -34,14 +37,14 @@ def home(request):
     if request.user.is_authenticated:
         try:
             record = get_object_or_404(UserRecord,email=request.user.email)
-            if not record.time_added_to_group:
+            if record.time_added_to_group:
                 if request.user.groups.filter(name='Admin').exists():
                     return redirect('/view')
                 logout(request)
                 messages.error(request, "Already added to group")
                 messages.warning(request, "Logged out successfully")
                 return redirect('/')
-            if not record.time_registered:
+            if record.time_registered:
                 if request.user.groups.filter(name='Admin').exists():
                     return redirect('/view')
                 logout(request)
@@ -50,9 +53,8 @@ def home(request):
             if not record.user:
                 record.user = request.user
                 record.save()
-            context = {"name": record.name, "rollno": record.rollno,
-                    "email": record.email, "phone": record.phone,"is_authorized":True}
-        except:
+            context = {"name": record.name, "email": record.email, "phone": record.phone,"is_authorized":True}
+        except Exception as e:
             context = {"is_authorized":False}
     else:
          context = {"is_authorized":False}
@@ -69,7 +71,7 @@ def verify(request):
         flag = asyncio.run(verify_code(request,phone,pin,hash,password))
 
         if flag[0] == '' and flag[1] == True:
-            user_record_obj.telegram_number = f"+91{phone}"
+            user_record_obj.telegram_number = phone
             user_record_obj.time_registered = datetime.datetime.now()
             user_record_obj.time_added_to_group = datetime.datetime.now()
             user_record_obj.is_added_to_group = True
@@ -153,3 +155,68 @@ def check_user(request):
         if(User.objects.filter(email=email).exists()):
             return HttpResponse(json.dumps({'message':'exists'}), content_type='application/json')
         return HttpResponse(json.dumps({'message':'does_not_exist'}), content_type='application/json')
+
+def login_user(request):
+    if request.method=='POST':
+        email = request.POST['email']
+        pwd = request.POST['pwd']
+        user_username = User.objects.get(email=email).username
+        user = authenticate(request,username=user_username,password=pwd)
+        if user:
+            login(request,user)
+            messages.success(request,"Successfully logged in.")
+            return redirect('/home')
+        else:
+            messages.error(request,"Invalid Credentials.")
+            return redirect('/')
+
+def register_user(request):
+    if request.method=='POST':
+        email = request.POST['email']
+        pwd1 = request.POST['password1']
+        pwd2 = request.POST['password2']
+        if pwd1 == pwd2:
+            try:
+                user = User(username=email.split('@')[0],email=email)
+                user.set_password(pwd1)
+                user.save()
+            except:
+                user = User(username=email.split('@')[0]+random.randint(1,10), email=email)
+                user.set_password(pwd1)
+                user.save()
+            finally:
+                messages.success(request, "Successfully registered.")
+                return redirect('/home')
+        else:
+                messages.error(request,"Passwords dont match")
+                return redirect('/')
+
+@user_passes_test(check_viewing_rights_admin)
+def import_users(request):
+    if request.method == 'POST' and request.FILES['file']:
+        file = request.FILES['file']
+        if str(file).endswith('.csv'):
+            fs = FileSystemStorage()
+            fname = random.randint(1,10000)
+            fs.save(f'{fname}.csv', file)
+            try:
+                input_file = csv.DictReader(open(f"media/{fname}.csv"))
+                records = list(input_file)
+                for record in records:
+                    try:
+                        UserRecord.objects.create(name=record['name'], phone=record['phone'], email=record['email'])
+                    except Exception as e:
+                        messages.error(request,"Error adding "+record['email']+" "+str(e))
+                messages.success(request, 'Users added successfully')
+            except:
+                messages.error(request,'Please check the csv file has the correct fields.')
+            finally:
+                del input_file
+                try:
+                    os.remove(f'media/{fname}.csv')
+                except Exception as e:
+                    print(e)
+
+        else:
+            messages.error(request,'Please import a csv file')
+    return render(request, 'base_app/import_users.html')

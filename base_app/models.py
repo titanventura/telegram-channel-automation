@@ -13,7 +13,7 @@ class UserRecord(models.Model):
 
     user = models.OneToOneField(User,on_delete=models.SET_NULL,null=True)
     name = models.CharField(max_length=120,blank=False,null=False)
-    phone = models.CharField(max_length=10,unique=True)
+    phone = models.CharField(max_length=20,unique=True)
     email = models.EmailField(max_length=50,unique=True)
     telegram_number = models.CharField(max_length=13,unique=True,blank=True,null=True)
     is_added_to_group = models.BooleanField(default=False)
