@@ -1,15 +1,15 @@
 from django.shortcuts import render,redirect,HttpResponse
 import json
 from django.contrib.auth.decorators import login_required,user_passes_test
-from base_app.models import UserRecord
+from .models import UserRecord
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib import messages
 import datetime
 from django.contrib.auth import logout,authenticate,login
-from base_app.permissions import check_viewing_rights_admin
+from .permissions import check_viewing_rights_admin
 import asyncio
-from base_app.tasks import send_code,verify_code
+from .tasks import send_code,verify_code
 from django.contrib.auth.models import User
 import random
 from django.core.files.storage import FileSystemStorage
