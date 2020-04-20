@@ -19,14 +19,12 @@
     <h1>Not registered users</h1>
     <table id="datatable2" class="table mt-5 table-striped table-bordered nowrap" >
         <thead>
-            <th>Roll no</th>
             <th>Name</th>
             <th>Email</th>
             </thead>
             <tbody>
             {% for record in unregistered_records %}
                 <tr>
-                    <td>{{ record.rollno }}</td>
                     <td>{{ record.name }}</td>
                     <td>{{ record.email }}</td>
                 </tr>
@@ -36,7 +34,6 @@
     <h1>Added Users</h1>
     <table id="datatable3" class="table mt-5 table-striped table-bordered nowrap" >
         <thead>
-            <th>Roll no</th>
             <th>Name</th>
             <th>Added at</th>
             <th>Email</th>
@@ -45,7 +42,6 @@
             <tbody>
             {% for record in added_records %}
                 <tr>
-                    <td>{{ record.rollno }}</td>
                     <td>{{ record.name }}</td>
                     <td>{{ record.time_added_to_group }}</td>
                     <td>{{ record.email }}</td>
@@ -60,17 +56,12 @@
 
     <script>
     $(document).ready(function() {
-    var table = $('#datatable').DataTable( {
-        responsive: true
-    } );
     var table2= $('#datatable2').DataTable( {
         responsive: true
     } );
     var table3= $('#datatable3').DataTable( {
         responsive: true
     } );
-
-    new $.fn.dataTable.FixedHeader( table );
     new $.fn.dataTable.FixedHeader( table2 );
     new $.fn.dataTable.FixedHeader( table3 );
     } );

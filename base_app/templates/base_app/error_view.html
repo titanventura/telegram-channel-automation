@@ -13,32 +13,9 @@
 {% block content %}
     <center>
     <div style="width:50%">
-{#    <h1>Registered Users (To be added to the channel)</h1>#}
-{#    <table id="datatable" class="table mt-5 table-striped table-bordered nowrap" >#}
-{#        <thead>#}
-{#            <th>Roll no</th>#}
-{#            <th>Name</th>#}
-{#            <th>Registered at</th>#}
-{#            <th>Email</th>#}
-{#            <th>Registered Telegram Number</th>#}
-{#            </thead>#}
-{#            <tbody>#}
-{#            {% for record in registered_records %}#}
-{#                <tr>#}
-{#                    <td>{{ record.rollno }}</td>#}
-{#                    <td>{{ record.name }}</td>#}
-{#                    <td>{{ record.time_registered }}</td>#}
-{#                    <td>{{ record.email }}</td>#}
-{#                    <td>{{ record.telegram_number }}</td>#}
-{#                </tr>#}
-{#            {% endfor %}#}
-{#            </tbody>#}
-{#    </table>#}
-
     <h1>Error users</h1>
     <table id="datatable2" class="table mt-5 table-striped table-bordered nowrap" >
         <thead>
-            <th>Roll no</th>
             <th>Name</th>
             <th>Email</th>
             <th>Error</th>
@@ -46,7 +23,6 @@
             <tbody>
             {% for record in error_records %}
                 <tr>
-                    <td>{{ record.rollno }}</td>
                     <td>{{ record.name }}</td>
                     <td>{{ record.email }}</td>
                     <td>{{ record.reason_for_error }}</td>
@@ -54,71 +30,21 @@
             {% endfor %}
             </tbody>
     </table>
-{#    <h1>Added Users</h1>#}
-{#    <table id="datatable3" class="table mt-5 table-striped table-bordered nowrap" >#}
-{#        <thead>#}
-{#            <th>Roll no</th>#}
-{#            <th>Name</th>#}
-{#            <th>Added at</th>#}
-{#            <th>Email</th>#}
-{#            <th>Registered Telegram Number</th>#}
-{#            </thead>#}
-{#            <tbody>#}
-{#            {% for record in added_records %}#}
-{#                <tr>#}
-{#                    <td>{{ record.rollno }}</td>#}
-{#                    <td>{{ record.name }}</td>#}
-{#                    <td>{{ record.time_added_to_group }}</td>#}
-{#                    <td>{{ record.email }}</td>#}
-{#                    <td>{{ record.telegram_number }}</td>#}
-{#                </tr>#}
-{#            {% endfor %}#}
-{#            </tbody>#}
-{#    </table>#}
-{#</div>#}
+    </div>
     </center>
-
-
-{#    <div class="row" >#}
-{#        <h1></h1>#}
-{##}
-
-{#    </div>#}
-{#    <div class="row">#}
-{##}
-{#    </div>#}
-{#    <div class="row">#}
-{##}
-{#    </div>#}
 
 
 
 
     <script>
     $(document).ready(function() {
-    var table = $('#datatable').DataTable( {
-        responsive: true
-    } );
     var table2= $('#datatable2').DataTable( {
         responsive: true
     } );
-    var table3= $('#datatable3').DataTable( {
-        responsive: true
-    } );
 
-    new $.fn.dataTable.FixedHeader( table );
     new $.fn.dataTable.FixedHeader( table2 );
-    new $.fn.dataTable.FixedHeader( table3 );
     } );
 
-
-
-
-{#        $(document).ready(function() {#}
-{#    $('#datatable').dataTable();#}
-{#    $('#datatable2').dataTable();#}
-{#    $('#datatable3').dataTable();#}
-{##}
 
     </script>
 
@@ -130,16 +56,3 @@ body{
 </style>
 {% endblock content %}
 
-
-
-
-{##}
-{#<table class="table table-striped" id="datatable2">#}
-
-{#    </table>#}
-{##}
-{##}
-{##}
-{#<table class="table table-striped"  id="datatable3">#}
-
-{#    </table>#}

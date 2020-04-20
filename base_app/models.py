@@ -18,5 +18,4 @@ class UserRecord(models.Model):
     telegram_number = models.CharField(max_length=13,unique=True,blank=True,null=True)
     is_added_to_group = models.BooleanField(default=False)
     reason_for_error =  models.CharField(max_length=200,default="",blank=True)
-    time_registered = models.DateTimeField(blank=True,default=None,null=True)
     time_added_to_group = models.DateTimeField(blank=True,default=None,null=True)
