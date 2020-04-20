@@ -19,7 +19,6 @@ sqlparse==0.3.1
 static3==0.7.0
 Telethon==1.11.3
 urllib3==1.25.8
-tqdm
 pandas
 dj_static
 python-dotenv
