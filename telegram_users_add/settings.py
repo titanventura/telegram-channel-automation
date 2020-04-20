@@ -130,7 +130,7 @@ AUTHENTICATION_BACKENDS = [
 
 # A SETTING from the config file that can differentiate between normal authentication and google OAuth.
 OAUTH_ENABLED = False
-if(os.getenv('GOOGLE_CLIENT_ID')!= None and os.getenv('GOOGLE_CLIENT_SECRET')!= None):
+if(os.getenv('GOOGLE_CLIENT_ID')!= '0' and os.getenv('GOOGLE_CLIENT_SECRET')!= '0'):
     oauth_client_id,oauth_client_secret = os.getenv('GOOGLE_CLIENT_ID'),os.getenv('GOOGLE_CLIENT_SECRET')
     OAUTH_ENABLED = True
     AUTHENTICATION_BACKENDS += ['allauth.account.auth_backends.AuthenticationBackend']

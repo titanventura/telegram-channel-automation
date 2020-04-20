@@ -44,12 +44,6 @@ def home(request):
                 messages.error(request, "Already added to group")
                 messages.warning(request, "Logged out successfully")
                 return redirect('/')
-            if record.time_registered:
-                if request.user.groups.filter(name='Admin').exists():
-                    return redirect('/view')
-                logout(request)
-                messages.warning(request,"Logging out...")
-                return render(request, "base_app/notify_user.html", {})
             if not record.user:
                 record.user = request.user
                 record.save()
@@ -132,8 +126,7 @@ def logout_user(request):
     return redirect("/")
 
 
-@login_required(login_url="/")
-@user_passes_test(check_viewing_rights_admin)
+@user_passes_test(check_viewing_rights_admin,login_url='/')
 def view(request):
     added_records = UserRecord.objects.filter(is_added_to_group=True)
     registered_records = UserRecord.objects.filter(
@@ -142,8 +135,7 @@ def view(request):
     return render(request,'base_app/view.html',{'added_records':added_records,"registered_records":registered_records,"unregistered_records":unregistered_records})
 
 
-@login_required(login_url="/")
-@user_passes_test(check_viewing_rights_admin)
+@user_passes_test(check_viewing_rights_admin,login_url='/')
 def check_errors(request):
     error_records = UserRecord.objects.filter(Q(is_added_to_group=False) & ~Q(reason_for_error=''))
     return render(request,'base_app/error_view.html',{'error_records':error_records})
