@@ -11,4 +11,7 @@ The Core point of this project is to provide an interface to automate the proces
 This Project is built on top of django and has telethon at its core. Telethon is an Open Source python library that lets you integrate with the MTProto Telegram API just by making HTTP requests.
 
 ## What do i have to do ?
-Well. You can start off with cloning the repository and running it. For further guidelines look at the Installation_guides.md folder.
+Well. You can start off with cloning the repository and running it. For further guidelines look at the Installation_guides.md folder. 
+
+## Guidelines and Challenges
+The Readme file is pretty self-explanatory and contains details on setting up the project and customizing it. To know more about the challenges faced during building this project or workflow/architecture, please visit the guides folder.

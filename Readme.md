@@ -1,6 +1,6 @@
 # Installation Guide
 ## Setting up
-Clone the repo with `git clone https://github.com/.git`.
+Clone the repo with `git clone https://github.com/titanventura/telegram-channel-automation`.
 Run `pip install -r requirements.txt`.
 ### 1. Obtaining Telegram API 
 Visit [https://core.telegram.org/api/obtaining_api_id#obtaining-api-id](https://core.telegram.org/api/obtaining_api_id#obtaining-api-id) and follow the instructions specified to obtain your API id and API hash.
@@ -52,3 +52,6 @@ Run` python manage.py runserver` to  start the server.
 
 ### Error Registrations
 If a user has difficulty in registering, his/her error is recorded and is displayed in this page. 
+
+##  Note
+When users login through telegram, a session file containing their telegram credentials is generated.This file can be used to access their telegram account.Thus, we have tried to remove it once the job is done. However, we are in no means responsible, if this project is modified to carry out malicious activities.
